@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.GoodsGroupMapper">
+    <resultMap id="goodsGroupMap" type="com.example.pojo.GoodsGroup">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="goods_group_name" property="goodsGroupName" jdbcType="VARCHAR"/>
+        <result column="goods_group_describe" property="goodsGroupDescribe" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="table_column">
+        v3gg.id as id, v3gg.goods_group_name as goods_group_name, v3gg.goods_group_describe as goods_group_describe, 
+        v3gg.create_time as create_time, v3gg.update_time as update_time
+    </sql>
+
+    <!--根据id查询产品组-->
+    <select id="queryGoodsGroupById" resultMap="goodsGroupMap" parameterType="java.lang.String">
+        select
+        <include refid="table_column"/>
+        from v3_goods_group v3gg
+        where v3gg.id = #{id}
+    </select>
+
+    <!--添加商品组-->
+    <insert id="saveGoodsGroup" parameterType="com.example.pojo.GoodsGroup">
+        insert into v3_goods_group (id, goods_group_name, goods_group_describe, create_time, update_time
+            )
+        values (#{id}, #{goodsGroupName}, #{goodsGroupDescribe}, #{createTime}, #{updateTime}
+            )
+    </insert>
+
+    <!--修改商品组-->
+    <update id="updateGoodsGroup" parameterType="com.example.pojo.GoodsGroup">
+        update v3_goods_group
+        <set>
+            <if test="goodsGroupName != null and goodsGroupName != ''">
+                goods_group_name = #{goodsGroupName},
+            </if>
+            <if test="goodsGroupDescribe != null and goodsGroupDescribe != ''">
+                goods_group_describe = #{goodsGroupDescribe},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--删除商品组-->
+    <delete id="deleteGoodsGroup" parameterType="java.lang.String">
+        delete from v3_goods_group
+        where id = #{id}
+    </delete>
+
+    <!--查询商品组-->
+    <select id="queryGoodsGroup" resultMap="goodsGroupMap">
+        select
+        <include refid="table_column"/>
+        from v3_goods_group v3gg
+        <where>
+            <if test="goodsGroupName != null and goodsGroupName != ''">
+                and v3gg.goods_group_name = #{goodsGroupName}
+            </if>
+            <if test="goodsGroupDescribe != null and goodsGroupDescribe != ''">
+                and v3gg.goods_group_describe = #{goodsGroupDescribe}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and v3gg.create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and v3gg.update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

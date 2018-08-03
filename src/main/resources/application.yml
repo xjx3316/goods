@@ -1,11 +1,10 @@
 spring:
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/sb
-    username: root
-    password: root
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.example.pojo
-server:
-  port: 8080
+  profiles:
+    active: dev
+
+#测试和生产环境不需要修改的配置
+pagehelper:
+ helperDialect: mysql
+ reasonable: true
+ supportMethodsArguments: true
+ params: count=countSql
