@@ -49,20 +49,20 @@ public class GoodsGroupController {
     /**
      * 删除商品组
      *
-     * @param goodsGroup
+     * @param goodsGroupIds
      * @return
      */
     @GetMapping("/deleteGoodsGroup")
-    public Object deleteGoodsGroup(GoodsGroup goodsGroup) {
+    public Object deleteGoodsGroup(String[] goodsGroupIds) {
         ShowVo showVo = new ShowVo();
         try {
             //判断空参
-            if (StringUtils.isBlank(goodsGroup.getId())) {
+            if (goodsGroupIds.length == 0) {
                 showVo.setCode(ReturnData.GOODS_GROUP_ID_IS_NULL.getCode());
                 showVo.setMessage(ReturnData.GOODS_GROUP_ID_IS_NULL.getMessage());
                 return showVo;
             }
-            showVo = goodsGroupService.deleteGoodsGroup(goodsGroup, showVo);
+            showVo = goodsGroupService.deleteGoodsGroup(goodsGroupIds, showVo);
         } catch (Exception e) {
             e.printStackTrace();
             showVo.setCode(ReturnData.ERROR.getCode());

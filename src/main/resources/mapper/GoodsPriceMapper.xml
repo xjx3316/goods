@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.GoodsPriceMapper">
+    <resultMap id="goodsPriceMap" type="com.example.pojo.GoodsPrice">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="property_price" property="propertyPrice" jdbcType="VARCHAR"/>
+        <result column="price_need" property="priceNeed" jdbcType="VARCHAR"/>
+        <result column="price_month" property="priceMonth" jdbcType="VARCHAR"/>
+        <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="goods_type_id" property="goodsTypeId" jdbcType="VARCHAR"/>
+        <result column="goods_type_name" property="goodsTypeName" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="table_column">
+        v3gp.id as id, v3gp.property_price as property_price,
+        v3gp.price_need as price_need, v3gp.price_month as price_month,
+        v3gp.goods_id as goods_id, v3gp.goods_type_id as goods_type_id,
+        v3gp.goods_type_name as goods_type_name, v3gp.create_time as create_time, v3gp.update_time as update_time
+    </sql>
+
+    <select id="getById" resultMap="goodsPriceMap" parameterType="java.lang.String">
+        select
+        <include refid="table_column"/>
+        from v3_goods_price v3gp
+        where v3gp.id = #{id}
+    </select>
+
+    <!--创建商品价格-->
+    <insert id="saveGoodsPrice" parameterType="com.example.pojo.GoodsPrice">
+        insert into v3_goods_price (id, property_price, price_need, price_month,
+            goods_id, goods_type_id, goods_type_name, create_time,
+            update_time)
+        values (#{id}, #{propertyPrice}, #{priceNeed}, #{priceMonth},
+            #{goodsId}, #{goodsTypeId}, #{goodsTypeName}, #{createTime},
+            #{updateTime})
+    </insert>
+
+    <update id="update" parameterType="com.example.pojo.GoodsPrice">
+        update v3_goods_price
+        <set>
+            <if test="propertyPrice != null and propertyPrice != ''">
+                property_price = #{propertyPrice},
+            </if>
+            <if test="priceNeed != null and priceNeed != ''">
+                price_need = #{priceNeed},
+            </if>
+            <if test="priceMonth != null and priceMonth != ''">
+                price_month = #{priceMonth},
+            </if>
+            <if test="goodsId != null and goodsId != ''">
+                goods_id = #{goodsId},
+            </if>
+            <if test="goodsTypeId != null and goodsTypeId != ''">
+                goods_type_id = #{goodsTypeId},
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                goods_type_name = #{goodsTypeName},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from v3_goods_price
+        where id = #{id}
+    </delete>
+
+    <!--根据商品id删除商品对应的价格-->
+    <delete id="deleteGoodsPrice" parameterType="java.lang.String">
+        delete from v3_goods_price
+        where goods_id = #{goodsPropertyId}
+    </delete>
+
+    <!--查询商品价格对象-->
+    <select id="queryGoodsPrice" resultMap="goodsPriceMap">
+        select
+        <include refid="table_column"/>
+        from v3_goods_price v3gp
+        <where>
+            <if test="propertyPrice != null and propertyPrice != ''">
+                and v3gp.property_price = #{propertyPrice}
+            </if>
+            <if test="priceNeed != null and priceNeed != ''">
+                and v3gp.price_need = #{priceNeed}
+            </if>
+            <if test="priceMonth != null and priceMonth != ''">
+                and v3gp.price_month = #{priceMonth}
+            </if>
+            <if test="goodsId != null and goodsId != ''">
+                and v3gp.goods_id = #{goodsId}
+            </if>
+            <if test="goodsTypeId != null and goodsTypeId != ''">
+                and v3gp.goods_type_id = #{goodsTypeId}
+            </if>
+            <if test="goodsTypeName != null and goodsTypeName != ''">
+                and v3gp.goods_type_name = #{goodsTypeName}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and v3gp.create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and v3gp.update_time = #{updateTime}
+            </if>
+        </where>
+        ORDER BY v3gp.create_time DESC
+    </select>
+
+</mapper>

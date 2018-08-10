@@ -19,11 +19,11 @@ public interface GoodsGroupService {
     /**
      * 删除商品组
      *
-     * @param goodsGroup
+     * @param goodsGroupIds
      * @param showVo
      * @return
      */
-    ShowVo deleteGoodsGroup(GoodsGroup goodsGroup, ShowVo showVo);
+    ShowVo deleteGoodsGroup(String[] goodsGroupIds, ShowVo showVo);
 
     /**
      * 修改商品组

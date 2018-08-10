@@ -75,6 +75,7 @@
                 and v3gg.update_time = #{updateTime}
             </if>
         </where>
+        ORDER BY v3gg.create_time DESC
     </select>
 
 </mapper>

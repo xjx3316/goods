@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.GoodsPropertyMapper" >
+    <resultMap id="goodsPropertyMap" type="com.example.pojo.GoodsProperty" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="goods_group_id" property="goodsGroupId" jdbcType="VARCHAR" />
+        <result column="goods_group_name" property="goodsGroupName" jdbcType="VARCHAR" />
+        <result column="goods_name" property="goodsName" jdbcType="VARCHAR" />
+        <result column="billing_pattern" property="billingPattern" jdbcType="VARCHAR" />
+        <result column="region_id" property="regionId" jdbcType="VARCHAR" />
+        <result column="region_name" property="regionName" jdbcType="VARCHAR" />
+        <result column="goods_property" property="goodsProperty" jdbcType="VARCHAR" />
+        <result column="parent_goods_id" property="parentGoodsId" jdbcType="VARCHAR" />
+        <result column="price_type" property="priceType" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+        <result column="up_time" property="upTime" jdbcType="VARCHAR" />
+        <result column="down_time" property="downTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="table_column" >
+        v3gp.id as id, v3gp.goods_group_id as goods_group_id, v3gp.goods_group_name as goods_group_name, 
+        v3gp.goods_name as goods_name, v3gp.billing_pattern as billing_pattern, v3gp.region_id as region_id, 
+        v3gp.region_name as region_name, v3gp.goods_property as goods_property,
+        v3gp.price_type as price_type, v3gp.status as status, v3gp.create_time as create_time, v3gp.update_time as update_time,
+        v3gp.up_time as up_time, v3gp.down_time as down_time
+    </sql>
+
+    <!--根据主键id查询商品对象-->
+    <select id="queryGoodsPropertyById" resultMap="goodsPropertyMap" parameterType="java.lang.String" >
+        select
+        <include refid="table_column" />
+        from v3_goods_property v3gp
+        where v3gp.id = #{id}
+    </select>
+
+    <!--添加商品-->
+    <insert id="saveGoods" parameterType="com.example.pojo.GoodsProperty" >
+        insert into v3_goods_property (id, goods_group_id, goods_group_name, goods_name, billing_pattern, 
+            region_id, region_name, goods_property, price_type, status,
+            create_time,update_time, up_time, down_time)
+        values (#{id}, #{goodsGroupId}, #{goodsGroupName}, #{goodsName}, #{billingPattern}, 
+            #{regionId}, #{regionName}, #{goodsProperty}, #{priceType}, #{status},
+            #{createTime},#{updateTime} #{upTime}, #{downTime})
+    </insert>
+
+    <!--修改商品信息,商品价格除外-->
+    <update id="updateGoodsProperty" parameterType="com.example.pojo.GoodsProperty" >
+        update v3_goods_property
+        <set >
+            <if test="goodsGroupId != null and goodsGroupId != ''" >
+                goods_group_id = #{goodsGroupId},
+            </if>
+            <if test="goodsGroupName != null and goodsGroupName != ''" >
+                goods_group_name = #{goodsGroupName},
+            </if>
+            <if test="goodsName != null and goodsName != ''" >
+                goods_name = #{goodsName},
+            </if>
+            <if test="billingPattern != null and billingPattern != ''" >
+                billing_pattern = #{billingPattern},
+            </if>
+            <if test="regionId != null and regionId != ''" >
+                region_id = #{regionId},
+            </if>
+            <if test="regionName != null and regionName != ''" >
+                region_name = #{regionName},
+            </if>
+            <if test="goodsProperty != null and goodsProperty != ''" >
+                goods_property = #{goodsProperty},
+            </if>
+            <if test="priceType != null and priceType != ''" >
+                price_type = #{priceType},
+            </if>
+            <if test="status != null and status != ''" >
+                status = #{status},
+            </if>
+            <if test="createTime != null and createTime != ''" >
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''" >
+                update_time = #{updateTime},
+            </if>
+            <if test="upTime != null and upTime != ''" >
+                up_time = #{upTime},
+            </if>
+            <if test="downTime != null and downTime != ''" >
+                down_time = #{downTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--删除商品-->
+    <delete id="deleteGoods" parameterType="java.lang.String" >
+        delete from v3_goods_property
+        where id = #{id}
+    </delete>
+
+    <!--查询商品-->
+    <select id="queryGoodsProperty" resultMap="goodsPropertyMap" >
+        select
+        <include refid="table_column" />
+        from v3_goods_property v3gp
+        <where >
+            <if test="goodsGroupId != null and goodsGroupId != ''" >
+                and v3gp.goods_group_id = #{goodsGroupId}
+            </if>
+            <if test="goodsGroupName != null and goodsGroupName != ''" >
+                and v3gp.goods_group_name = #{goodsGroupName}
+            </if>
+            <if test="goodsName != null and goodsName != ''" >
+                and v3gp.goods_name = #{goodsName}
+            </if>
+            <if test="billingPattern != null and billingPattern != ''" >
+                and v3gp.billing_pattern = #{billingPattern}
+            </if>
+            <if test="regionId != null and regionId != ''" >
+                and v3gp.region_id = #{regionId}
+            </if>
+            <if test="regionName != null and regionName != ''" >
+                and v3gp.region_name = #{regionName}
+            </if>
+            <if test="goodsProperty != null and goodsProperty != ''" >
+                and v3gp.goods_property = #{goodsProperty}
+            </if>
+            <if test="priceType != null and priceType != ''" >
+                and v3gp.price_type = #{priceType}
+            </if>
+            <if test="status != null and status != ''" >
+                and v3gp.status = #{status}
+            </if>
+            <if test="createTime != null and createTime != ''" >
+                and v3gp.create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''" >
+                and v3gp.update_time = #{updateTime}
+            </if>
+            <if test="upTime != null and upTime != ''" >
+                and v3gp.up_time = #{upTime}
+            </if>
+            <if test="downTime != null and downTime != ''" >
+                and v3gp.down_time = #{downTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,7 +1,9 @@
 package com.example.service.serviceImpl;
 
 import com.example.mapper.GoodsGroupMapper;
+import com.example.mapper.GoodsPropertyMapper;
 import com.example.pojo.GoodsGroup;
+import com.example.pojo.GoodsProperty;
 import com.example.service.GoodsGroupService;
 import com.example.utils.DateUtils;
 import com.example.utils.ReturnData;
@@ -24,6 +26,8 @@ public class GoodsGroupServiceImpl implements GoodsGroupService {
     private static final Logger LOG = Logger.getLogger(GoodsGroupServiceImpl.class);
     @Autowired
     private GoodsGroupMapper goodsGroupMapper;
+    @Autowired
+    private GoodsPropertyMapper goodsPropertyMapper;
 
     /**
      * 添加商品组
@@ -51,16 +55,24 @@ public class GoodsGroupServiceImpl implements GoodsGroupService {
     /**
      * 删除商品组
      *
-     * @param goodsGroup
+     * @param goodsGroupIds
      * @param showVo
      * @return
      */
-    public ShowVo deleteGoodsGroup(GoodsGroup goodsGroup, ShowVo showVo) {
-        Integer i = goodsGroupMapper.deleteGoodsGroup(goodsGroup);
-        if (i != 1) {
-            showVo.setCode(ReturnData.GOODS_GROUP_DELETE_FAIL.getCode());
-            showVo.setMessage(ReturnData.GOODS_GROUP_DELETE_FAIL.getMessage());
-            return showVo;
+    public ShowVo deleteGoodsGroup(String[] goodsGroupIds, ShowVo showVo) {
+        for (String goodsGroupId : goodsGroupIds) {
+            //如果此商品组下有商品，不允许删除商品组
+            GoodsProperty goodsProperty = new GoodsProperty();
+            goodsProperty.setGoodsGroupId(goodsGroupId);
+            List<GoodsProperty> goodsPropertyList = goodsPropertyMapper.queryGoodsProperty(goodsProperty);
+            if (goodsPropertyList.size() != 0) {
+                showVo.setCode(ReturnData.GOODS_GROUP_HAVE_GOODS.getCode());
+                showVo.setMessage(ReturnData.GOODS_GROUP_HAVE_GOODS.getMessage());
+                return showVo;
+            }
+            GoodsGroup goodsGroup = new GoodsGroup();
+            goodsGroup.setId(goodsGroupId);
+            goodsGroupMapper.deleteGoodsGroup(goodsGroup);
         }
         showVo.setCode(ReturnData.SUCCESS.getCode());
         showVo.setMessage(ReturnData.SUCCESS.getMessage());
@@ -127,5 +139,14 @@ public class GoodsGroupServiceImpl implements GoodsGroupService {
         showVo.setMessage(ReturnData.SUCCESS.getMessage());
         showVo.setResult(g);
         return showVo;
+    }
+
+    public static void main(String[] args) {
+        String s = "2-8";
+        String[] split = s.split("-");
+        for (String s1 : split) {
+            LOG.info(s1.length());
+            LOG.info(s1);
+        }
     }
 }

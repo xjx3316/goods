@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mapper.GoodsTypeMapper">
+    <resultMap id="goodsTypeMap" type="com.example.pojo.GoodsType">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="goods_id" property="goodsId" jdbcType="VARCHAR"/>
+        <result column="goods_type" property="goodsType" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="table_column">
+        v3gt.id as id, v3gt.goods_id as goods_id, v3gt.goods_type as goods_type, v3gt.create_time as create_time
+    </sql>
+
+    <select id="getById" resultMap="goodsTypeMap" parameterType="java.lang.String">
+        select
+        <include refid="table_column"/>
+        from v3_goods_type v3gt
+        where v3gt.id = #{id}
+    </select>
+
+    <!--添加商品类型-->
+    <insert id="saveGoodsType" parameterType="com.example.pojo.GoodsType">
+        insert into v3_goods_type (id, goods_id, goods_type, create_time)
+        values (#{id}, #{goodsId}, #{goodsType}, #{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.example.pojo.GoodsType">
+        update v3_goods_type
+        <set>
+            <if test="goodsId != null and goodsId != ''">
+                goods_id = #{goodsId},
+            </if>
+            <if test="goodsType != null and goodsType != ''">
+                goods_type = #{goodsType},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from v3_goods_type
+        where id = #{id}
+    </delete>
+
+    <!--通过商品id删除属于此商品的类型-->
+    <delete id="deleteGoodsType" parameterType="java.lang.String">
+        delete from v3_goods_type
+        where goods_id = #{goodsPropertyId}
+    </delete>
+
+    <!--查询商品类型-->
+    <select id="queryGoodsType" resultMap="goodsTypeMap">
+        select
+        <include refid="table_column"/>
+        from v3_goods_type v3gt
+        <where>
+            <if test="goodsId != null and goodsId != ''">
+                and v3gt.goods_id = #{goodsId}
+            </if>
+            <if test="goodsType != null and goodsType != ''">
+                and v3gt.goods_type = #{goodsType}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and v3gt.create_time = #{createTime}
+            </if>
+        </where>
+    </select>
+
+</mapper>
