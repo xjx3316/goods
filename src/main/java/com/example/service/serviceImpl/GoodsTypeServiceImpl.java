@@ -16,4 +16,19 @@ import java.util.List;
  */
 @Service
 public class GoodsTypeServiceImpl implements GoodsTypeService {
+
+    @Autowired
+    private GoodsTypeMapper goodsTypeMapper;
+    /**
+     * 根据商品id查询商品类型
+     *
+     * @param goodsId
+     * @return
+     */
+    public List<GoodsType> queryGoodsType(String goodsId) {
+        GoodsType gt = new GoodsType();
+        gt.setGoodsId(goodsId);
+        List<GoodsType> goodsTypeList = goodsTypeMapper.queryGoodsType(gt);
+        return goodsTypeList;
+    }
 }

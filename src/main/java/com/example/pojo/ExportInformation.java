@@ -2,54 +2,44 @@ package com.example.pojo;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by xjx on 2018/8/10.
  */
 public class ExportInformation implements Serializable {
-    private String goodsType;//接收此商品的类型
-    private String property;//接收需要显示的excel列属性
-    private String propertyPrice;//接收数据
+    private String rows;//列的属性名
+    private List<String> stringList;//价格信息
 
     public ExportInformation() {
     }
 
-    public ExportInformation(String goodsType, String property, String propertyPrice) {
-        this.goodsType = goodsType;
-        this.property = property;
-        this.propertyPrice = propertyPrice;
+    public ExportInformation(String rows, List<String> stringList) {
+        this.rows = rows;
+        this.stringList = stringList;
     }
 
-    public String getGoodsType() {
-        return goodsType;
+    public String getRows() {
+        return rows;
     }
 
-    public void setGoodsType(String goodsType) {
-        this.goodsType = goodsType;
+    public void setRows(String rows) {
+        this.rows = rows;
     }
 
-    public String getProperty() {
-        return property;
+    public List<String> getStringList() {
+        return stringList;
     }
 
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
-    public String getPropertyPrice() {
-        return propertyPrice;
-    }
-
-    public void setPropertyPrice(String propertyPrice) {
-        this.propertyPrice = propertyPrice;
+    public void setStringList(List<String> stringList) {
+        this.stringList = stringList;
     }
 
     @Override
     public String toString() {
         return "ExportInformation{" +
-                "goodsType='" + goodsType + '\'' +
-                ", property='" + property + '\'' +
-                ", propertyPrice='" + propertyPrice + '\'' +
+                "rows='" + rows + '\'' +
+                ", stringList=" + stringList +
                 '}';
     }
 }

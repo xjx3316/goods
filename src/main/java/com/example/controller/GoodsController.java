@@ -3,10 +3,13 @@ package com.example.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.example.mapper.GoodsPriceMapper;
 import com.example.pojo.ExportInformation;
 import com.example.pojo.GoodsPrice;
 import com.example.pojo.GoodsProperty;
+import com.example.pojo.GoodsType;
 import com.example.service.GoodsService;
+import com.example.service.GoodsTypeService;
 import com.example.utils.JsonUtils;
 import com.example.utils.ReturnData;
 import com.example.utils.ShowVo;
@@ -33,6 +36,10 @@ public class GoodsController {
     private static final Logger LOG = Logger.getLogger(GoodsController.class);
     @Autowired
     private GoodsService goodsService;
+    @Autowired
+    private GoodsTypeService goodsTypeService;
+    @Autowired
+    private GoodsPriceMapper goodsPriceMapper;
 
     /**
      * 添加商品
@@ -239,7 +246,7 @@ public class GoodsController {
 
     //导出
     @PostMapping("/exportGoodsPrice")
-    public void exportGoodsPrice(HttpServletResponse response, @RequestBody List<ExportInformation> exportInformationList) {
+    public void exportGoodsPrice(HttpServletResponse response,@RequestBody ExportInformation exportInformation) {
         try {
             String fileName = new Date().getTime() + ".xls";
             fileName = new String(fileName.getBytes("gb2312"), "iso8859-1");
@@ -249,31 +256,29 @@ public class GoodsController {
             HSSFSheet sheet = wb.createSheet("商品价格");
             sheet.setDefaultColumnWidth(15);
             HSSFCellStyle style = wb.createCellStyle();
-            HSSFRow row = sheet.createRow(0);
             style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-            HSSFCell cell = row.createCell(0);
 
-            for (int i = 0; i < exportInformationList.size(); i++) {
-                String goodsType = exportInformationList.get(i).getGoodsType();//获取商品类型
-                String[] property = exportInformationList.get(i).getProperty().split(",");//获取商品需要展示的列属性
-                String string = exportInformationList.get(i).getPropertyPrice();//获取价格数据
-                JSONArray jsonArray = (JSONArray) JSONArray.parse(string);
-                for (int j = 0; j < property.length; j++) {//遍历四个属性 cpu,ram,按需,包年包月
-                    if (j == 0) {
-                        cell.setCellValue(goodsType);
-                        cell.setCellStyle(style);
-                        cell = row.createCell(j);
-                    } else {
-                        cell.setCellValue(property[j-1]);
-                        cell.setCellStyle(style);
-                        cell = row.createCell(i);
-                    }
-                }
-                //遍历价格数据[{cpu:1,ram:1,按需:0.1,包年包月:1},{cpu:1,ram:2,按需:0.2,包年包月:2},{cpu:2,ram:2,按需:0.3,包年包月:3}]
-                for (int k = 0; k < jsonArray.size(); k++) {
-                    JSONObject jsonObject = (JSONObject) jsonArray.get(k);
-                    row = sheet.createRow(k + 1);
-                    row.createCell(k).setCellValue(jsonObject.getString(property[k]));
+
+            //获取此商品要展示的列名称
+            String[] rows = exportInformation.getRows().split(",");
+            //获取价格数据的集合
+            List<String> stringList = exportInformation.getStringList();
+
+            HSSFRow row = sheet.createRow(0);
+            for (int i = 0; i < rows.length; i++) {
+                HSSFCell cell = row.createCell(i);
+                cell.setCellValue(rows[i]);
+                cell.setCellStyle(style);
+                cell = row.createCell(i+1);
+            }
+            for (int i = 0; i < stringList.size(); i++) {
+                row = sheet.createRow(i+1);
+                String[] split = stringList.get(i).split(",");
+                for (int j = 0; j < split.length; j++) {
+                    HSSFCell cell = row.createCell(j);
+                    cell.setCellValue(split[j]);
+                    cell.setCellStyle(style);
+                    cell = row.createCell(j+1);
                 }
             }
 
