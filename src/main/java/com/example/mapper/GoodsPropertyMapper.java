@@ -45,4 +45,11 @@ public interface GoodsPropertyMapper {
      * @return
      */
     Integer updateGoodsProperty(GoodsProperty goodsProperty);
+
+    /**
+     * 根据商品组的id,修改属于此商品组的商品的商品组名称
+     *
+     * @param goodsProperty
+     */
+    void updateGoodsByGroupId(GoodsProperty goodsProperty);
 }

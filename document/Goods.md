@@ -19,8 +19,23 @@ RequestMethod:POST
 |regionId|String|区域id|
 |regionName|String|区域名称|
 |priceType|String|商品的计价方式 0:单价;1:固定价格|
-|gp|List<String>|商品的属性|
-|gt|List<String>|商品的类型|
+|goodsProperty|String[]|商品的属性|
+|goodsType|String[]|商品的类型|
+
+请求示例:
+```
+{
+	"goodsGroupId":"16a6928ec2094b7f853168b84b230e3d",
+	"goodsGroupName":"云服务",
+	"goodsName":"云主机",
+	"billingPattern":"2",
+	"regionId":"cf7e2976765b44c6a543f049e96c926c",
+	"regionName":"北京三区",
+	"goodsProperty":"cpu,ram",
+	"priceType":"1",
+	"goodsType":"标准型,高性能性"
+}
+```
 
 返回示例:
 ```
@@ -48,13 +63,34 @@ RequestMethod:GET
 {
     "code": 200,
     "message": "操作成功",
-    "result": null
+    "result": {
+        "goodsTypeList": [  //商品类型集合
+            {
+                "id": "4fc50d49385b4db298bdf9d7fdbe2c18",   //商品类型id
+                "goodsId": "009482b97d4541aabaa14cf1f15b5250",  //商品id
+                "goodsType": "标准型", //商品类型名称
+                "createTime": "2018-08-10 11:32:37"
+            },
+            {
+                "id": "b71c7eded2444821932cb7ae44b4ca1a",
+                "goodsId": "009482b97d4541aabaa14cf1f15b5250",
+                "goodsType": "高性能性",
+                "createTime": "2018-08-10 11:32:37"
+            }
+        ],
+        "goodsPropertyList": [  //商品属性名称
+            "cpu",
+            "ram"
+        ],
+        "billingPattern": "1",  //计费模式 0:按需;1:包年包月;2:按需和包年包月
+        "priceType": "0"    //商品的计价方式 0:单价;1:固定价格
+    }
 }
 ```
 
-3.修改商品组
+3.创建商品价格/修改商品价格(修改时传值与创建相同,全部数据)
 ------------------------------------
-URL:/goodsGroup/updateGoodsGroup
+URL:/goods/saveGoodsPrice
 
 RequestMethod:POST
 
@@ -62,9 +98,47 @@ RequestMethod:POST
 
 |参数|参数类型|说明|
 |---|---------|----|
-|id|String|商品组id(必传)|
-|GoodsGroupName|String|商品组名称(可选)|
-|goodsGroupDescribe|String|商品组描述(可选)|
+|goodsId|String|商品id (必传)|
+
+请求示例:
+```
+
+	[
+		{
+			"propertyPrice":"{\"cpu\":"1\",\"ram\":\"1\"}", //商品的属性和对应的值的json
+			"priceNeed":"500",  //商品的按需单价
+			"priceMonth":"7000",    //商品的按月单价
+			"goodsId":"009482b97d4541aabaa14cf1f15b5250",   //商品的id
+			"goodsTypeId":"4fc50d49385b4db298bdf9d7fdbe2c18",   //商品类型id
+			"goodsTypeName":"标准型"   //商品类型名称
+		},
+		{
+			"propertyPrice":"{\"cpu\":\"1\",\"ram\":\"2\"}",
+			"priceNeed":"0.06",
+			"priceMonth":"0.6",
+			"goodsId":"009482b97d4541aabaa14cf1f15b5250",
+			"goodsTypeId":"4fc50d49385b4db298bdf9d7fdbe2c18",
+			"goodsTypeName":"标准型"
+		},
+		{
+			"propertyPrice":"{\"cpu\":\"2\",\"ram\":\"2\"}",
+			"priceNeed":"0.07",
+			"priceMonth":"0.7",
+			"goodsId":"009482b97d4541aabaa14cf1f15b5250",
+			"goodsTypeId":"4fc50d49385b4db298bdf9d7fdbe2c18",
+			"goodsTypeName":"标准型"
+		},
+		{
+			"propertyPrice":"{\"cpu\":\"1\",\"ram\":\"1\"}",
+			"priceNeed":"0.1",
+			"priceMonth":"10",
+			"goodsId":"009482b97d4541aabaa14cf1f15b5250",
+			"goodsTypeId":"b71c7eded2444821932cb7ae44b4ca1a",
+			"goodsTypeName":"高性能性"
+		}
+		]
+
+```
 
 返回示例:
 ```
@@ -75,9 +149,9 @@ RequestMethod:POST
 }
 ```
 
-4.查询商品组
+4.删除商品
 ------------------------------------
-URL:/goodsGroup/queryGoodsGroupByPage
+URL:/goods/deleteGoods
 
 RequestMethod:GET
 
@@ -85,37 +159,46 @@ RequestMethod:GET
 
 |参数|参数类型|说明|
 |---|---------|----|
-|page|Integer|当前页数 分页查询必传，下拉菜单查询page = 0|
-|rows|Integer|每页行数 分页查询必传，下拉菜单查询rows = 0|
-|goodsGroupName|String|商品组名称(可选)|
+|ids|String[]|商品id (必传)|
 
 返回示例:
 ```
 {
     "code": 200,
     "message": "操作成功",
-    "result": [
-        {
-            "id": "22332045538d4041806f15f28ee7b290",   //主键id
-            "goodsGroupName": "容器4",    //组名称
-            "goodsGroupDescribe": "容器4",    //描述
-            "createTime": "2018-08-03 17:50:34", //创建时间
-            "updateTime": "2018-08-03 17:53:23" //修改时间
-        },
-        {
-            "id": "95ddec2d5f2e48639aa720da4dfc8ae0",
-            "goodsGroupName": "云服务",
-            "goodsGroupDescribe": "yunfuwu",
-            "createTime": "2018-08-03 17:49:59",
-            "updateTime": null
-        }
-    ]
+    "result": null
 }
 ```
 
-5.根据id查询产品组
+5.修改商品信息,商品价格除外(修改内容包括发布,下架,商品名称,计费模式，区域)
 ------------------------------------
-URL:/goodsGroup/queryGoodsGroupById
+URL:/goods/updateGoodsProperty
+
+RequestMethod:POST
+
+请求参数说明:
+
+|参数|参数类型|说明|
+|---|---------|----|
+|id|String|商品id (必传)|
+|goodsName|String|商品名称 (可选)|
+|billingPattern|String|计费模式 0:按需;1:包年包月;2:按需和包年包月(可选)|
+|regionId|String|区域id (可选)|
+|regionName|String|区域名称(可选)|
+|status|String|商品的状态 0:未发布;1:上架;2:下架;(可选)|
+
+返回示例:
+```
+{
+    "code": 200,
+    "message": "操作成功",
+    "result": null
+}
+```
+
+6.根据条件分页查询商品列表
+------------------------------------
+URL:/goods/queryGoodsByPage
 
 RequestMethod:GET
 
@@ -123,7 +206,12 @@ RequestMethod:GET
 
 |参数|参数类型|说明|
 |---|---------|----|
-|id|String|产品组id (必传)|
+|page|Integer|页码(必传)|
+|rows|Integer|行数(必传)|
+|goodsName|String|商品名称(可选)|
+|regionId|String|区域id (可选)|
+|regionName|String|区域名称(可选)|
+|status|String|商品的状态 0:未发布;1:上架;2:下架;(可选)|
 
 返回示例:
 ```
@@ -131,33 +219,53 @@ RequestMethod:GET
     "code": 200,
     "message": "操作成功",
     "result": {
-        "id": "95ddec2d5f2e48639aa720da4dfc8ae0",   //主键id
-        "goodsGroupName": "云服务",    //组名称
-        "goodsGroupDescribe": "yunfuwu",    //描述
-        "createTime": "2018-08-03 17:49:59",
-        "updateTime": null
+        "pageNum": 1,
+        "pageSize": 10,
+        "size": 1,
+        "startRow": 1,
+        "endRow": 1,
+        "total": 1,
+        "pages": 1,
+        "list": [
+            {
+                "id": "009482b97d4541aabaa14cf1f15b5250",   //商品主键id
+                "goodsGroupId": "16a6928ec2094b7f853168b84b230e3d", //商品组id
+                "goodsGroupName": "云服务",    //商品组名称
+                "goodsName": "云主机产品",   //商品名称
+                "billingPattern": "1",  //计费模式 0:按需;1:包年包月;2:按需和包年包月
+                "regionId": "c0f60fce45df4eada4cc8e2bf4b2ea6d", //区域id
+                "regionName": "北京二区",   //区域名称
+                "goodsProperty": "cpu,ram", //商品属性
+                "priceType": "0",   //商品的计价方式 0:单价;1:固定价格
+                "status": "0",  //商品的状态 0:未发布;1:上架;2:下架;
+                "createTime": "2018-08-10 11:32:37",    //商品的创建时间
+                "updateTime": "2018-08-10 14:09:42",    //商品的修改时间
+                "upTime": null, //商品的发布(上架)时间
+                "downTime": null,   //商品的下架时间
+                "goodsType": null   //
+            }
+        ],
+        "prePage": 0,
+        "nextPage": 0,
+        "isFirstPage": true,
+        "isLastPage": true,
+        "hasPreviousPage": false,
+        "hasNextPage": false,
+        "navigatePages": 8,
+        "navigatepageNums": [
+            1
+        ],
+        "navigateFirstPage": 1,
+        "navigateLastPage": 1,
+        "lastPage": 1,
+        "firstPage": 1
     }
 }
 ```
 
-6.导出企业认证
+7.查看，查看某个商品的详情
 ------------------------------------
-URL:/customerAuthrioty/exportCompanyAuthrioty
-
-RequestMethod:POST
-
-请求参数说明:
-
-|参数|参数类型|说明|
-|---|---------|----|
-|companyName|String|企业名称|
-|status|String|审核状态 0:待审核  1:打回  2:通过|
-|ids|String[]|已选中数据的id数组|
-|b|Boolean|点击导出全部认证数据，传参数b=true,其他参数不传|
-
-7.查询个人认证/企业认证的总数
-------------------------------------
-URL:/customerAuthrioty/queryAuthriotyAmount
+URL:/goods/queryGoodsPropertyById
 
 RequestMethod:GET
 
@@ -165,12 +273,85 @@ RequestMethod:GET
 
 |参数|参数类型|说明|
 |---|---------|----|
-|type|String|type=0:个人认证;type=1:企业认证|
+|id|String|商品主键id(必传)|
 
 返回示例:
 ```
 {
     "code": 200,
     "message": "操作成功",
-    "object": 3 //数量
+    "result": {
+        "id": "009482b97d4541aabaa14cf1f15b5250",   //商品主键id
+        "goodsGroupId": "16a6928ec2094b7f853168b84b230e3d", //商品组id
+        "goodsGroupName": "云服务",    //商品组名称
+        "goodsName": "云主机产品",   //商品名称
+        "billingPattern": "1",  //计费模式 0:按需;1:包年包月;2:按需和包年包月
+        "regionId": "c0f60fce45df4eada4cc8e2bf4b2ea6d", //区域id
+        "regionName": "北京二区",   //区域名称
+        "priceType": "0",   //商品的计价方式 0:单价;1:固定价格
+        "status": "0",  //商品的状态 0:未发布;1:上架;2:下架;
+        "createTime": "2018-08-10 11:32:37",    //创建时间
+        "updateTime": "2018-08-10 14:09:42",    //修改时间
+        "upTime": null, //发布时间
+        "downTime": null,   //下架时间
+        "goodsTypePriceVoList": [
+            {
+                "goodsTypeId": "4fc50d49385b4db298bdf9d7fdbe2c18",  //商品类型id
+                "goodsTypeName": "标准型", //商品类型名称
+                "propertyPriceVoList": [
+                    {
+                        "propertyPrice": "{"cpu":"1","ram":"2"}",   //商品配置以及配置值
+                        "priceNeed": "0.06",    //对应的按需价格
+                        "priceMonth": "0.6" //对应的按月价格
+                    },
+                    {
+                        "propertyPrice": "{"cpu":"1","ram":"1"}",
+                        "priceNeed": "0.05",
+                        "priceMonth": "0.5"
+                    }
+                ]
+            },
+            {
+                "goodsTypeId": "b71c7eded2444821932cb7ae44b4ca1a",
+                "goodsTypeName": "高性能性",
+                "propertyPriceVoList": [
+                    {
+                        "propertyPrice": "{"cpu":"1","ram":"1"}",
+                        "priceNeed": "0.1",
+                        "priceMonth": "10"
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+8.导出商品价格
+------------------------------------
+URL:/goods/exportGoodsPrice
+
+RequestMethod:POST
+
+请求参数说明:
+
+|参数|参数类型|说明|
+|---|---------|----|
+|rows|String|列的属性名(必传)|
+|stringList|List<String>|价格信息(必传)|
+
+返回示例:
+```
+[
+    {
+        "propertyPrice": "[{cpu:1,ram:1,按需:0.1,包年包月:1},{cpu:1,ram:2,按需:0.2,包年包月:2},{cpu:2,ram:2,按需:0.3,包年包月:3}]",
+        "goodsType": "标准型",
+        "property": "cpu,ram,按需,包年包月"
+    },
+    {
+        "propertyPrice": "[{cpu:1,ram:1,按需:1,包年包月:10}]",
+        "goodsType": "高性能型",
+        "property": "cpu,ram,按需,包年包月"
+    }
+]
 ```

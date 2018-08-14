@@ -7,3 +7,6 @@ spring:
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.example.pojo
+
+CMS:
+  USER_URL: http://v3cms.docker.sspaas.net/user/queryUser  #请求cms的user对象url

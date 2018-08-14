@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -292,6 +293,8 @@ public class GoodsServiceImpl implements GoodsService {
      */
     public ShowVo updateGoodsProperty(GoodsProperty goodsProperty, ShowVo showVo) {
         String time = DateUtils.getnow();
+        if (StringUtils.isNotBlank(goodsProperty.getStatus()))
+            goodsProperty.setUpTime(time);
         goodsProperty.setUpdateTime(time);
         Integer i = goodsPropertyMapper.updateGoodsProperty(goodsProperty);
         if (i != 1) {

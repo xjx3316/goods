@@ -1,30 +1,27 @@
 package com.example.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.example.mapper.GoodsPriceMapper;
 import com.example.pojo.ExportInformation;
 import com.example.pojo.GoodsPrice;
 import com.example.pojo.GoodsProperty;
-import com.example.pojo.GoodsType;
 import com.example.service.GoodsService;
-import com.example.service.GoodsTypeService;
+import com.example.utils.HttpUtils;
 import com.example.utils.JsonUtils;
 import com.example.utils.ReturnData;
 import com.example.utils.ShowVo;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.Cell;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by xjx on 2018/8/6.
@@ -36,10 +33,7 @@ public class GoodsController {
     private static final Logger LOG = Logger.getLogger(GoodsController.class);
     @Autowired
     private GoodsService goodsService;
-    @Autowired
-    private GoodsTypeService goodsTypeService;
-    @Autowired
-    private GoodsPriceMapper goodsPriceMapper;
+
 
     /**
      * 添加商品
@@ -292,9 +286,17 @@ public class GoodsController {
     }
 
     public static void main(String[] args) {
-        String s = "[{cpu:1,ram:1,按需:0.1,包年包月:1},{cpu:1,ram:2,按需:0.2,包年包月:2},{cpu:2,ram:2,按需:0.3,包年包月:3}]";
-        JSONArray jsonArray = (JSONArray) JSONArray.parse(s);
-        LOG.info(jsonArray);
+        /*String cmsurl = cms_user_url;
+        LOG.info("cmsurl: "+cmsurl);*/
+
+       /* String url = "http://v3cms.docker.sspaas.net/user/queryUser";
+        Map map = new HashMap<>();
+        map.put("userId","9b2b7fcc847945eca909a82983c3b3d9");
+        String s = HttpUtils.doGet(url, map);
+        LOG.info("s: "+s);
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        JSONObject object = jsonObject.getJSONObject("object");
+        LOG.info("object: "+object);*/
     }
 
 }

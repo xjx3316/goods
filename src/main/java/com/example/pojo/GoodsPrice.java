@@ -11,7 +11,7 @@ public class GoodsPrice implements Serializable {
 
     private String id;
     /**
-     * 商品的属性和对应的价格的json
+     * 商品的属性和对应的值的json
      */
     private String propertyPrice;
 

@@ -54,6 +54,11 @@ public class GoodsPriceVo implements Serializable{
     private String createTime;
 
     /**
+     * 商品的修改时间
+     */
+    private String updateTime;
+
+    /**
      * 商品的发布(上架)时间
      */
     private String upTime;
@@ -68,7 +73,7 @@ public class GoodsPriceVo implements Serializable{
     public GoodsPriceVo() {
     }
 
-    public GoodsPriceVo(String id, String goodsGroupId, String goodsGroupName, String goodsName, String billingPattern, String regionId, String regionName, String priceType, String status, String createTime, String upTime, String downTime, List<GoodsTypePriceVo> goodsTypePriceVoList) {
+    public GoodsPriceVo(String id, String goodsGroupId, String goodsGroupName, String goodsName, String billingPattern, String regionId, String regionName, String priceType, String status, String createTime, String updateTime, String upTime, String downTime, List<GoodsTypePriceVo> goodsTypePriceVoList) {
         this.id = id;
         this.goodsGroupId = goodsGroupId;
         this.goodsGroupName = goodsGroupName;
@@ -79,6 +84,7 @@ public class GoodsPriceVo implements Serializable{
         this.priceType = priceType;
         this.status = status;
         this.createTime = createTime;
+        this.updateTime = updateTime;
         this.upTime = upTime;
         this.downTime = downTime;
         this.goodsTypePriceVoList = goodsTypePriceVoList;
@@ -164,6 +170,14 @@ public class GoodsPriceVo implements Serializable{
         this.createTime = createTime;
     }
 
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
     public String getUpTime() {
         return upTime;
     }
@@ -201,6 +215,7 @@ public class GoodsPriceVo implements Serializable{
                 ", priceType='" + priceType + '\'' +
                 ", status='" + status + '\'' +
                 ", createTime='" + createTime + '\'' +
+                ", updateTime='" + updateTime + '\'' +
                 ", upTime='" + upTime + '\'' +
                 ", downTime='" + downTime + '\'' +
                 ", goodsTypePriceVoList=" + goodsTypePriceVoList +

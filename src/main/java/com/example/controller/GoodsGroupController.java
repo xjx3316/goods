@@ -104,7 +104,7 @@ public class GoodsGroupController {
     }
 
     /**
-     * 查询产品组
+     * 查询商品组
      * page=0&&rows=0不分页，否则分页
      *
      * @param page
@@ -132,7 +132,7 @@ public class GoodsGroupController {
     }
 
     /**
-     * 根据id查询产品组
+     * 根据id查询品组
      *
      * @param goodsGroup
      * @return

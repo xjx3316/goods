@@ -14,6 +14,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class GoodsGroupServiceImpl implements GoodsGroupService {
      * @param showVo
      * @return
      */
+    @Transactional
     public ShowVo saveGoodsGroup(GoodsGroup goodsGroup, ShowVo showVo) {
         String id = UuidUtils.get32UUID();
         String time = DateUtils.getnow();
@@ -95,6 +97,12 @@ public class GoodsGroupServiceImpl implements GoodsGroupService {
             showVo.setMessage(ReturnData.GOODS_GROUP_UPDATE_FAIL.getMessage());
             return showVo;
         }
+        //根据商品组的id,修改属于此商品组的商品的商品组名称
+        GoodsProperty goodsProperty = new GoodsProperty();
+        goodsProperty.setGoodsGroupId(goodsGroup.getId());
+        goodsProperty.setGoodsGroupName(goodsGroup.getGoodsGroupName());
+        goodsPropertyMapper.updateGoodsByGroupId(goodsProperty);
+
         showVo.setCode(ReturnData.SUCCESS.getCode());
         showVo.setMessage(ReturnData.SUCCESS.getMessage());
         return showVo;

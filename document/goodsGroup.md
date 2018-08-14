@@ -106,7 +106,7 @@ RequestMethod:GET
 }
 ```
 
-5.根据id查询产品组
+5.根据id查询商品组
 ------------------------------------
 URL:/goodsGroup/queryGoodsGroupById
 
@@ -131,39 +131,3 @@ RequestMethod:GET
         "updateTime": null
     }
 }
-```
-
-6.导出企业认证
-------------------------------------
-URL:/customerAuthrioty/exportCompanyAuthrioty
-
-RequestMethod:POST
-
-请求参数说明:
-
-|参数|参数类型|说明|
-|---|---------|----|
-|companyName|String|企业名称|
-|status|String|审核状态 0:待审核  1:打回  2:通过|
-|ids|String[]|已选中数据的id数组|
-|b|Boolean|点击导出全部认证数据，传参数b=true,其他参数不传|
-
-7.查询个人认证/企业认证的总数
-------------------------------------
-URL:/customerAuthrioty/queryAuthriotyAmount
-
-RequestMethod:GET
-
-请求参数说明:
-
-|参数|参数类型|说明|
-|---|---------|----|
-|type|String|type=0:个人认证;type=1:企业认证|
-
-返回示例:
-```
-{
-    "code": 200,
-    "message": "操作成功",
-    "object": 3 //数量
-```

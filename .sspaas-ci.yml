@@ -1,0 +1,12 @@
+script:
+  - mkdir -p goods/file
+  - mvn clean install -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.test.skip=true
+  - cp -prf target/*.jar goods/file
+  - mv goods/file/*.jar goods/file/ROOT.jar
+
+#生产
+#image: docker/goods:v0.0.1
+
+#test
+image: console/goods:test0.0.1
+
